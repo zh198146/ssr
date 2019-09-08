@@ -1,18 +1,24 @@
 <template>
   <div class="container">
     <!-- 轮播图组件:el-carousel -->
-  <el-carousel 
+    <!-- arrow: 左右切换的箭头总是显示的 -->
+    <el-carousel 
     arrow="always">
+        <!-- el-carousel-item 是幻灯片的每一项 -->
         <el-carousel-item 
         v-for="(item, index) in banners" 
         :key="index">
-            <!--轮播图的背景图片 -->
+            <!-- 轮播图的背景图片
+             background-size：控制背景图片的大小，自适应宽高 -->
             <div class="banner-image" 
-            :style="`background:url(${ $axios.defaults.baseURL + item.url}) center center no-repeat;
-            background-size:contain contain;`">
+            :style="`
+            background:url(${ $axios.defaults.baseURL + item.url}) center center no-repeat;
+            background-size:contain contain;
+            `">
             </div>
         </el-carousel-item>
     </el-carousel>
+
     <!-- 搜索框 -->
     <div class="banner-content">
         <div class="search-bar">
@@ -43,17 +49,20 @@
             </el-row>
         </div>
     </div>
-  </div>
 
+  </div>
 </template>
 
 <script>
+
 export default {
+
   data(){
-     return {
+    return {
       // 轮播图数组
       banners: [
       ],
+
       // 定义搜索tab切换的数据
       options: [
         {
@@ -74,16 +83,43 @@ export default {
       current: 0
     }
   },
-   mounted () {
-      this.$axios({
-        url:'/scenics/banners',
-      }).then( res => {
-        const data = res.data.data
-        this.banners = data
-      })
+
+  methods: {
+    // 点击搜索的tab栏时候触发
+    handleClick(index){
+
+      // 点击索引是2时候，代表点击是机票
+      if(index === 2){
+        // 路由规则虽然pages可以直接访问，不需要配置
+        // 但是可以通用路由的方法
+        this.$router.push("/air");
+      }
+
+      // 把当前点击的索引赋值给current
+      this.current = index;
     }
-}
+  },
+
+  mounted(){
+    // 请求轮播图的数据
+    // 该写法是一种通用的标准，nuxt帮我们封装好了。
+    // Vue.prototype.$axios = axios;
+    this.$axios({
+      url: "/scenics/banners",
+    }).then( res => {
+      // 获取轮播图的数组
+      const data = res.data.data;
+
+      // 赋值给banners
+      this.banners = data;
+    })
+
+    //console.dir(this.$axios);
+  }
+};
 </script>
+
+
 <style scoped lang="less">
 .container{
     min-width:1000px;

@@ -1,43 +1,44 @@
 <template>
-  <div class="ome">
-    <el-low
-    type="flex" 
-    justify="center" 
-    align="middle" 
-    class="man">
-      <div class="form-wrapper">
-        <!-- 表单头部tab -->
+    <div class="container">
+        <!-- 主要内容 -->
+        <el-row 
+        type="flex" 
+        justify="center" 
+        align="middle" 
+        class="main">
+
+            <div class="form-wrapper">
+                <!-- 表单头部tab -->
                 <el-row type="flex" justify="center" class="tabs">
-                    <span 
-                    v-for="(item, index) in ['登录', '注册']"
-                    :key="index"
-                    @click="handleClick(index)"
-                    :class="{active: current === index}">
-                    {{ item }}
+                    <span :class="{active: currentTab === index}" 
+                    v-for="(item, index) in [`登录`, `注册`]"
+                    :key="index" 
+                    @click="handleChangeTab(index)">
+                        {{item}}
                     </span>
                 </el-row>
-      </div>
-    </el-low>
-  </div>
+
+                <!-- 登录功能组件 -->
+                <LoginForm v-if="currentTab == 0"/>
+
+                <!-- 注册功能组件 -->
+                <!-- <RegisterForm v-if="currentTab == 1"/> -->
+            </div>
+        </el-row>
+    </div>
 </template>
 
 <script>
-// 导入登录组件
-import LoginForm from "@/components/user/loginForm";
 export default {
-data(){
-  return{
-    current: 0
-  }
-},
-components: {
-      LoginForm
+    data(){
+        return {
+            currentTab: 0
+        }
     },
     methods: {
-        // 点击tab栏时候触发的
-        handleClick(index){
-          this.current = index;
-        }
+        handleChangeTab(index){
+            this.currentTab = index;
+        },
     }
 }
 </script>

@@ -1,69 +1,123 @@
 <template>
-  <el-form
-  :model='form'
-  ref="form"
-  :rules="rules"
-  class="form">
-    <el-form-item class="form-item" prop="username">
-        <el-input
-            v-model="form.username"
-            placeholder="用户名手机">
-        </el-input>
-    </el-form-item>
-    <el-form-item>
-        <el-input
-        v-model="form.captcha"
-         placeholder="验证码" >
-            <template slot="append">
-                <el-button @click="handleSendCaptcha">  
-                    发送验证码
-                </el-button>
-            </template>
-        </el-input>
-    </el-form-item>
-    <el-form-item class="form-item" prop="nickname">
-        <el-input
-        v-model="form.nickname"
-        placeholder="你的名字">
-        </el-input>
-    </el-form-item>
-    <el-form-item class="form-item" prop="password">
-        <el-input
-        v-model="form.nickname"
-        placeholder="密码"
-        type="password">
-        </el-input>
-    </el-form-item>
-    <el-form-item class="form-item" prop="checkPassword">
-        <el-input
-        v-model="form.nickname"
-        placeholder="确认密码">
-        </el-input>
-    </el-form-item>
-  </el-form>
+    <el-form 
+        :model="form" 
+        ref="form" 
+        :rules="rules" 
+        class="form">
+            <el-form-item class="form-item">
+                <el-input 
+                placeholder="用户名手机">
+                </el-input>
+            </el-form-item>
+
+            <el-form-item class="form-item">
+                <el-input 
+                placeholder="验证码" >
+                    <template slot="append">
+                        <el-button @click="handleSendCaptcha">
+                            发送验证码
+                        </el-button>
+                    </template>
+                </el-input>
+            </el-form-item>
+
+            <el-form-item class="form-item">
+                <el-input 
+                placeholder="你的名字">
+                </el-input>
+            </el-form-item>
+
+            <el-form-item class="form-item">
+                <el-input 
+                placeholder="密码" 
+                type="password"
+                ></el-input>
+            </el-form-item>
+
+            <el-form-item class="form-item">
+                <el-input 
+                placeholder="确认密码" 
+                type="password">
+                </el-input>
+            </el-form-item>
+
+            <el-button 
+            class="submit" 
+            type="primary" 
+            @click="handleRegSubmit">
+                注册
+            </el-button>
+        </el-form>
 </template>
 
 <script>
 export default {
+    data(){
+        return {
+            // 表单数据
+            form: {},
+            // 表单规则
+            rules: {},
+        }
+    },
+    methods: {
+        // 发送验证码
+        handleSendCaptcha(){
 
+        },
+
+
+        // 注册
+        handleRegSubmit(){
+            this.$refs['form'].validate((valid) => {
+            // 为true表示没有错误
+            if (valid) {
+                // 删除代码
+                // this.$axios({
+                //     url: "/accounts/login",
+                //     method: "POST",
+                //     data: this.form
+                // }).then(res => {
+                //     console.log(res.data);
+                // })
+				
+                // 新增代码
+                this.$store.dispatch("user/login", this.form).then(res => {
+                    // 成功提示
+                    this.$message({
+                        message: "登录成功，正在跳转",
+                        type: "success"
+                    });
+                    // 跳转到首页
+                    setTimeout(() => {
+                        this.$router.replace("/")
+                    }, 1000);
+                })
+            }
+        })
+        }
+    }
 }
 </script>
 
 <style scoped lang="less">
-    .form{	    
-        padding:25px;	        
-    }	    
-    .form-item{	    
-        margin-bottom:20px;	       
-    }	    
-    .form-text{	    
-        font-size:12px;	       
-        color:#409EFF;	       
-        text-align: right;	   
-        line-height: 1;	       
-    }	    
-    .submit{	   
-        width:100%;	        
-        margin-top:10px;	
-    }	    
-</style>	
+    .form{
+        padding:25px;
+    }
+
+    .form-item{
+        margin-bottom:20px;
+    }
+
+    .form-text{
+        font-size:12px;
+        color:#409EFF;
+        text-align: right;
+        line-height: 1;
+    }
+
+    .submit{
+        width:100%;
+        margin-top:10px;
+    }
+</style>
